@@ -1,0 +1,17 @@
+DELIMITER //
+
+CREATE FUNCTION total_livros_por_genero(genero VARCHAR(255)) RETURNS INT
+BEGIN
+    DECLARE total INT;
+    SET total = 0;
+
+    SELECT COUNT(*) INTO total
+    FROM Livro
+    WHERE Genero = genero;
+
+    RETURN total;
+END;
+
+//
+
+DELIMITER ;
