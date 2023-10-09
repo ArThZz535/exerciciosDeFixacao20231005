@@ -41,3 +41,39 @@ END;
 
 DELIMITER ;
 
+DELIMITER //
+
+CREATE FUNCTION atualizar_resumos() RETURNS INT
+BEGIN
+    DECLARE done INT DEFAULT 0;
+    DECLARE livro_resumo TEXT;
+
+    DECLARE cur CURSOR FOR
+        SELECT ISBN, Resumo
+        FROM Livro;
+
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+
+    OPEN cur;
+
+    read_loop: LOOP
+        FETCH cur INTO ISBN, livro_resumo;
+        IF done THEN
+            LEAVE read_loop;
+        END IF;
+        
+        SET livro_resumo = CONCAT(livro_resumo, ' Este é um excelente livro!');
+        
+        UPDATE Livro
+        SET Resumo = livro_resumo
+        WHERE ISBN = ISBN;
+    END LOOP;
+
+    CLOSE cur;
+
+    RETURN 1;
+END;
+
+//
+
+DELIMITER ;
