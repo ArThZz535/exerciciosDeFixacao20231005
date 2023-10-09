@@ -100,3 +100,23 @@ END;
 //
 
 DELIMITER ;
+
+DELIMITER //
+
+CREATE FUNCTION autores_sem_livros() RETURNS TEXT
+BEGIN
+    DECLARE autor_lista TEXT DEFAULT '';
+
+    SELECT GROUP_CONCAT(CONCAT(PrimeiroNome, ' ', UltimoNome) SEPARATOR ', ') INTO autor_lista
+    FROM Autor
+    WHERE AutorID NOT IN (
+        SELECT AutorID
+        FROM Livro_Autor
+    );
+
+    RETURN autor_lista;
+END;
+
+//
+
+DELIMITER ;
