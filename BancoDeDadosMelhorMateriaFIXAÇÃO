@@ -15,3 +15,29 @@ END;
 //
 
 DELIMITER ;
+
+DELIMITER //
+
+CREATE FUNCTION listar_livros_por_autor(primeiro_nome VARCHAR(255), ultimo_nome VARCHAR(255)) RETURNS TEXT
+BEGIN
+    DECLARE livro_lista TEXT DEFAULT '';
+    
+    SELECT GROUP_CONCAT(Titulo SEPARATOR ', ') INTO livro_lista
+    FROM Livro
+    WHERE ISBN IN (
+        SELECT ISBN
+        FROM Livro_Autor
+        WHERE AutorID IN (
+            SELECT AutorID
+            FROM Autor
+            WHERE PrimeiroNome = primeiro_nome AND UltimoNome = ultimo_nome
+        )
+    );
+
+    RETURN livro_lista;
+END;
+
+//
+
+DELIMITER ;
+
